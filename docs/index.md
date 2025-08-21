@@ -30,6 +30,12 @@ Tyrone Redfish is a comprehensive collection of Python scripts designed to inter
 - Set LED states (Off, Lit, Blinking)
 - Support for identification and status LEDs
 
+
+### Storage Inventory Management
+- Get current storage status
+- List available storage devices
+- Get detailed information about a specific storage device
+
 ## Quick Start
 
 1. **Install dependencies**:
