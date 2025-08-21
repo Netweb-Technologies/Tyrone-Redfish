@@ -1,0 +1,91 @@
+site_name: Tyrone Redfish Documentation
+site_description: Python scripts for managing Tyrone Servers using Redfish API
+site_author: Netweb Team
+# site_url: https://netwebindia.com/
+
+# Repository
+repo_name: Netweb-Technologies
+repo_url: https://github.com/Netweb-Technologies/tyrone-redfish
+
+# Configuration
+theme:
+  name: material
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+# Plugins
+plugins:
+  - search
+  # - mkdocstrings:
+  #     handlers:
+  #       python:
+  #         options:
+  #           docstring_style: google
+
+# Navigation
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quick-start.md
+    - Configuration: getting-started/configuration.md
+  - Scripts:
+    - Power Management: scripts/power-management.md
+    - LED Indicator: scripts/led-indicator.md
+    - Storage Inventory Manager: scripts/storage-inventory.md
+  - API Reference:
+    - Redfish Power Manager: api/power-manager.md
+    - LED Indicator Manager: api/led-indicator.md
+    - Storage Inventory Manager: api/storage-inventory.md
+
+  - Examples:
+    - Basic Usage: examples/basic-usage.md
+    - Advanced Examples: examples/advanced.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md
+
+# Extra
+extra:
+  social:
+    - icon: fontawesome/brands/gitlab
+      link: https://github.com/Netweb-Technologies/tyrone-redfish
+  version:
+    provider: mike
