@@ -1,7 +1,7 @@
 site_name: Tyrone Redfish Documentation
 site_description: Python scripts for managing Tyrone Servers using Redfish API
 site_author: Netweb Team
-# site_url: https://netwebindia.com/
+site_url: https://netwebindia.com/
 
 # Repository
 repo_name: Netweb-Technologies
@@ -85,7 +85,7 @@ nav:
 # Extra
 extra:
   social:
-    - icon: fontawesome/brands/gitlab
+    - icon: fontawesome/brands/github
       link: https://github.com/Netweb-Technologies/tyrone-redfish
   version:
     provider: mike
