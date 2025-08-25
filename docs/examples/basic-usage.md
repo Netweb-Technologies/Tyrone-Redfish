@@ -406,6 +406,313 @@ echo "All attempts failed. Giving up."
 exit 1
 ```
 
+## Telemetry Collection Examples
+
+### Example 1: Basic System Information
+
+Get basic system telemetry including power state and health:
+
+```bash
+python3 "Python Scripts/Redfish/GetTelemetryRedfish.py" \
+  -H 192.168.1.100 \
+  -u admin \
+  -p password123 \
+  --system
+```
+
+**Expected Output:**
+```
+============================================================
+ SYSTEM TELEMETRY
+============================================================
+
+Timestamp: 2025-08-25T10:30:15.123456
+Host: 192.168.1.100
+Type: system
+Power State: On
+Health: OK
+Model: Tyrone Server X1
+BIOS Version: 2.1.0
+----------------------------------------
+```
+
+### Example 2: Monitor Temperature and Fans
+
+Check thermal conditions of your server:
+
+```bash
+python3 "Python Scripts/Redfish/GetTelemetryRedfish.py" \
+  -H 192.168.1.100 \
+  -u admin \
+  -p password123 \
+  --thermal
+```
+
+**Expected Output:**
+```
+============================================================
+ THERMAL TELEMETRY
+============================================================
+
+Timestamp: 2025-08-25T10:30:15.123456
+Host: 192.168.1.100
+Type: temperature
+Sensor: CPU Temp
+Temperature: 65°C
+Critical Threshold: 85°C
+Health: OK
+----------------------------------------
+
+Timestamp: 2025-08-25T10:30:15.123456
+Host: 192.168.1.100
+Type: fan
+Fan: System Fan 1
+Speed: 2800 RPM
+Health: OK
+----------------------------------------
+```
+
+### Example 3: Power Consumption Monitoring
+
+Check power consumption and efficiency:
+
+```bash
+python3 "Python Scripts/Redfish/GetTelemetryRedfish.py" \
+  -H 192.168.1.100 \
+  -u admin \
+  -p password123 \
+  --power
+```
+
+**Expected Output:**
+```
+============================================================
+ POWER TELEMETRY
+============================================================
+
+Timestamp: 2025-08-25T10:30:15.123456
+Host: 192.168.1.100
+Type: power_control
+Power Consumed: 180 W
+Power Available: 500 W
+Health: OK
+----------------------------------------
+
+Timestamp: 2025-08-25T10:30:15.123456
+Host: 192.168.1.100
+Type: power_supply
+PSU: Power Supply 1
+Capacity: 500 W
+Efficiency: 92%
+Health: OK
+----------------------------------------
+```
+
+### Example 4: Continuous Monitoring
+
+Monitor server conditions every 30 seconds:
+
+```bash
+python3 "Python Scripts/Redfish/GetTelemetryRedfish.py" \
+  -H 192.168.1.100 \
+  -u admin \
+  -p password123 \
+  --thermal \
+  --continuous 30
+```
+
+**Expected Output:**
+```
+Starting continuous telemetry collection (interval: 30s)
+
+[2025-08-25 10:30:15] Sample 1
+============================================================
+ THERMAL TELEMETRY
+============================================================
+[thermal data displayed]
+
+[2025-08-25 10:30:45] Sample 2
+============================================================
+ THERMAL TELEMETRY
+============================================================
+[thermal data displayed]
+```
+
+Press `Ctrl+C` to stop monitoring.
+
+### Example 5: Export Telemetry Data
+
+Export all telemetry data to a JSON file:
+
+```bash
+python3 "Python Scripts/Redfish/GetTelemetryRedfish.py" \
+  -H 192.168.1.100 \
+  -u admin \
+  -p password123 \
+  --all \
+  --export-json server_telemetry.json
+```
+
+**Expected Output:**
+```
+[telemetry data displayed]
+
+Data exported to server_telemetry.json
+```
+
+### Example 6: CSV Export for Analysis
+
+Export thermal data to CSV for spreadsheet analysis:
+
+```bash
+python3 "Python Scripts/Redfish/GetTelemetryRedfish.py" \
+  -H 192.168.1.100 \
+  -u admin \
+  -p password123 \
+  --thermal \
+  --export-csv thermal_data.csv
+```
+
+### Example 7: JSON Output for Scripts
+
+Get data in JSON format for script processing:
+
+```bash
+python3 "Python Scripts/Redfish/GetTelemetryRedfish.py" \
+  -H 192.168.1.100 \
+  -u admin \
+  -p password123 \
+  --power \
+  --json
+```
+
+**Expected Output:**
+```json
+[
+  {
+    "timestamp": "2025-08-25T10:30:15.123456",
+    "host": "192.168.1.100",
+    "category": "power",
+    "type": "power_control",
+    "power_consumed_watts": 180,
+    "power_available_watts": 500,
+    "health": "OK"
+  }
+]
+```
+
+### Example 8: Monitor Multiple Components
+
+Get processor and memory information:
+
+```bash
+python3 "Python Scripts/Redfish/GetTelemetryRedfish.py" \
+  -H 192.168.1.100 \
+  -u admin \
+  -p password123 \
+  --processor \
+  --memory
+```
+
+### Example 9: Time-Limited Monitoring
+
+Monitor for exactly 10 samples, every minute:
+
+```bash
+python3 "Python Scripts/Redfish/GetTelemetryRedfish.py" \
+  -H 192.168.1.100 \
+  -u admin \
+  -p password123 \
+  --all \
+  --continuous 60 \
+  --count 10
+```
+
+### Example 10: Storage Health Check
+
+Monitor storage components for predictive failures:
+
+```bash
+python3 "Python Scripts/Redfish/GetTelemetryRedfish.py" \
+  -H 192.168.1.100 \
+  -u admin \
+  -p password123 \
+  --storage
+```
+
+**Expected Output:**
+```
+============================================================
+ STORAGE TELEMETRY
+============================================================
+
+Timestamp: 2025-08-25T10:30:15.123456
+Host: 192.168.1.100
+Type: controller
+Controller: Storage Controller 1
+Model: RAID Controller X1
+Firmware: 3.2.1
+Health: OK
+----------------------------------------
+
+Timestamp: 2025-08-25T10:30:15.123456
+Host: 192.168.1.100
+Type: drive
+Drive: Drive-1
+Model: Enterprise SSD
+Capacity: 960000000000 bytes
+Media Type: SSD
+Failure Predicted: False
+Health: OK
+----------------------------------------
+```
+
+## Simple Automation Scripts
+
+### Basic Temperature Alert Script
+
+Create a simple script to check for high temperatures:
+
+```bash
+#!/bin/bash
+# temp_check.sh - Simple temperature monitoring
+
+TEMP_THRESHOLD=75
+SERVER="192.168.1.100"
+
+# Get thermal data in JSON format
+TEMP_DATA=$(python3 "Python Scripts/Redfish/GetTelemetryRedfish.py" \
+    -H "$SERVER" -u admin -p password123 --thermal --json)
+
+# Simple check (requires jq for JSON parsing)
+echo "$TEMP_DATA" | jq -r '.[] | select(.type == "temperature") | "\(.sensor_name): \(.reading_celsius)°C"'
+```
+
+### Power Monitoring Script
+
+Monitor power consumption:
+
+```bash
+#!/bin/bash
+# power_monitor.sh - Power consumption logging
+
+LOG_FILE="power_consumption.log"
+SERVER="192.168.1.100"
+
+while true; do
+    timestamp=$(date)
+    power_data=$(python3 "Python Scripts/Redfish/GetTelemetryRedfish.py" \
+        -H "$SERVER" -u admin -p password123 --power --json)
+    
+    # Extract power consumption (requires jq)
+    power_watts=$(echo "$power_data" | jq -r '.[] | select(.type == "power_control") | .power_consumed_watts')
+    
+    echo "[$timestamp] Power consumption: ${power_watts}W" >> "$LOG_FILE"
+    
+    sleep 300  # Log every 5 minutes
+done
+```
+
 ## Frequently Asked Questions
 
 ### Q: How do I know if my server supports these operations?

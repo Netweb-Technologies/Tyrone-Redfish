@@ -71,10 +71,14 @@ nav:
     - Power Management: scripts/power-management.md
     - LED Indicator: scripts/led-indicator.md
     - Storage Inventory Manager: scripts/storage-inventory.md
+    - Telemetry Collection: scripts/telemetry-collection.md
+    - PXE Boot Management: scripts/pxe-boot-management.md
   - API Reference:
-    - Redfish Power Manager: api/power-manager.md
-    - LED Indicator Manager: api/led-indicator.md
-    - Storage Inventory Manager: api/storage-inventory.md
+    - Power Manager: api/power-manager.md
+    - LED Indicator: api/led-indicator.md
+    - Storage Inventory: api/storage-inventory.md
+    - Telemetry Collector: api/telemetry-collector.md
+    - PXE Boot Manager: api/pxe-boot-manager.md
 
   - Examples:
     - Basic Usage: examples/basic-usage.md
