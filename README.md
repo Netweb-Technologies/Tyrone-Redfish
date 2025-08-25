@@ -1,4 +1,4 @@
-# Tyrone Redfish - Redfish Server Management
+# Tyrone Redfish Scripts
 
 This repository contains Python scripts for managing Tyrone Servers using the Redfish API.
 
