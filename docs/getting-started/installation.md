@@ -27,7 +27,7 @@ Before installing Tyrone Redfish, ensure you have the following prerequisites:
 
 1. **Clone the repository**:
    ```bash
-   git clone http://github.com/Netweb-Technologies/tyrone-redfish.git
+   git clone https://github.com/Netweb-Technologies/tyrone-redfish.git
    cd tyrone-redfish
    ```
 
