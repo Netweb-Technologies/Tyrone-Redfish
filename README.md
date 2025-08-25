@@ -66,16 +66,16 @@ The `tyrone_redfish` binary provides a unified interface to all server managemen
 tyrone_redfish <command> --help
 
 # Power operations
-tyrone_redfish power -H 172.16.13.117 -u admin -p netweb@123 --get-state
-tyrone_redfish power -H 172.16.13.117 -u admin -p netweb@123 --set-state restart
+tyrone_redfish power -H 172.16.13.117 -u admin -p password --get-state
+tyrone_redfish power -H 172.16.13.117 -u admin -p password --set-state restart
 
 # LED control
-tyrone_redfish led -H 172.16.13.117 -u admin -p netweb@123 --get-state
-tyrone_redfish led -H 172.16.13.117 -u admin -p netweb@123 --set-state on
+tyrone_redfish led -H 172.16.13.117 -u admin -p password --get-state
+tyrone_redfish led -H 172.16.13.117 -u admin -p password --set-state on
 
 # Storage information
-tyrone_redfish storage -H 172.16.13.117 -u admin -p netweb@123 --get-inventory
+tyrone_redfish storage -H 172.16.13.117 -u admin -p password --get-inventory
 
 # PXE boot setup
-tyrone_redfish pxe -H 172.16.13.117 -u admin -p netweb@123 --pxe-once
+tyrone_redfish pxe -H 172.16.13.117 -u admin -p password --pxe-once
 ```
