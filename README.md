@@ -2,60 +2,80 @@
 
 This repository contains Python scripts for managing Tyrone Servers using the Redfish API.
 
-## Scripts
+## 🚀 Quick Start with Binary
 
-### GetSetPowerStateRedfish.py
-Power management script for controlling server power states.
+For the easiest experience, use the pre-compiled binary:
 
-### GetSetLedIndicatorRedfish.py  
-LED indicator management script for server identification.
-
-### GetStorageInventoryRedfish.py
-Storage inventory script for retrieving detailed storage information.
-
-## Examples
-
-### Power Management
 ```bash
-# Basic usage with verbose output
-python3 "Python Scripts/Redfish/GetSetPowerStateRedfish.py" -H 10.0.1.100 -u admin -p secret --get -v
+# Download and use the binary (located in bin/ directory)
+./bin/tyrone_redfish help
 
-# Set power state with custom port
-python3 "Python Scripts/Redfish/GetSetPowerStateRedfish.py" -H server.local --port 8443 -u admin -p secret --set On
-
-# Check available actions first
-python3 "Python Scripts/Redfish/GetSetPowerStateRedfish.py" -H 192.168.1.50 -u admin -p password --actions
+# Examples with the binary
+./bin/tyrone_redfish power -H 192.168.1.100 -u admin -p password --get-state
+./bin/tyrone_redfish led -H 192.168.1.100 -u admin -p password --set-state on
+./bin/tyrone_redfish storage -H 192.168.1.100 -u admin -p password --get-inventory
 ```
 
-### LED Indicator Control
+## 📦 Installation Options
+
+### Option 1: Use Pre-compiled Binary (Recommended)
 ```bash
-# Get current LED state
-python3 "Python Scripts/Redfish/GetSetLedIndicatorRedfish.py" -H 192.168.1.100 -u admin -p password --get
+# Navigate to bin directory
+cd bin/
 
-# Set LED to blinking for identification
-python3 "Python Scripts/Redfish/GetSetLedIndicatorRedfish.py" -H 192.168.1.100 -u admin -p password --set Blinking
+# Run the installation script
+sudo ./install.sh
 
-# Turn off LED
-python3 "Python Scripts/Redfish/GetSetLedIndicatorRedfish.py" -H 192.168.1.100 -u admin -p password --set Off
+# Or install manually
+sudo cp tyrone_redfish /usr/local/bin/
+sudo chmod +x /usr/local/bin/tyrone_redfish
+
+# Now use from anywhere
+tyrone_redfish help
 ```
 
-### Storage Inventory
+### Option 2: Run Python Scripts Directly
+Use the individual Python scripts as described in the sections below.
+
+### Option 3: Build Your Own Binary
 ```bash
-# Get storage summary
-python3 "Python Scripts/Redfish/GetStorageInventoryRedfish.py" -H 192.168.1.100 -u admin -p password --summary
+# Install PyInstaller
+pip install pyinstaller
 
-# Get all drives information
-python3 "Python Scripts/Redfish/GetStorageInventoryRedfish.py" -H 192.168.1.100 -u admin -p password --drives
+# Build the binary
+./build_binary.sh
 
-# Get all volumes information  
-python3 "Python Scripts/Redfish/GetStorageInventoryRedfish.py" -H 192.168.1.100 -u admin -p password --volumes
+# Binary will be created in bin/tyrone_redfish
+```
 
-# Get storage controllers information
-python3 "Python Scripts/Redfish/GetStorageInventoryRedfish.py" -H 192.168.1.100 -u admin -p password --controllers
+## 🔧 Unified CLI Commands
 
-# Get specific drive details
-python3 "Python Scripts/Redfish/GetStorageInventoryRedfish.py" -H 192.168.1.100 -u admin -p password --drive-id Drive-1
+The `tyrone_redfish` binary provides a unified interface to all server management functions:
 
-# Get output in JSON format
-python3 "Python Scripts/Redfish/GetStorageInventoryRedfish.py" -H 192.168.1.100 -u admin -p password --summary --json
+| Command | Description | Example |
+|---------|-------------|---------|
+| `power` | Power management (on/off/restart/status) | `tyrone_redfish power -H 192.168.1.100 -u admin -p pass --get-state` |
+| `led` | LED indicator control (on/off/blink/status) | `tyrone_redfish led -H 192.168.1.100 -u admin -p pass --set-state blink` |
+| `storage` | Storage inventory and information | `tyrone_redfish storage -H 192.168.1.100 -u admin -p pass --get-inventory` |
+| `telemetry` | System telemetry and monitoring | `tyrone_redfish telemetry -H 192.168.1.100 -u admin -p pass --collect-all` |
+| `pxe` | PXE boot configuration | `tyrone_redfish pxe -H 192.168.1.100 -u admin -p pass --pxe-once` |
+
+### Quick Examples
+```bash
+# Get help for any command
+tyrone_redfish <command> --help
+
+# Power operations
+tyrone_redfish power -H 172.16.13.117 -u admin -p netweb@123 --get-state
+tyrone_redfish power -H 172.16.13.117 -u admin -p netweb@123 --set-state restart
+
+# LED control
+tyrone_redfish led -H 172.16.13.117 -u admin -p netweb@123 --get-state
+tyrone_redfish led -H 172.16.13.117 -u admin -p netweb@123 --set-state on
+
+# Storage information
+tyrone_redfish storage -H 172.16.13.117 -u admin -p netweb@123 --get-inventory
+
+# PXE boot setup
+tyrone_redfish pxe -H 172.16.13.117 -u admin -p netweb@123 --pxe-once
 ```
