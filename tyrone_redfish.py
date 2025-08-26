@@ -612,9 +612,9 @@ class RedfishPxeBootManager:
         self.session.auth = HTTPBasicAuth(username, password)
         self.session.verify = verify_ssl
 
-        # Common Redfish endpoints
+        # Common Redfish endpoints - Updated for correct SD endpoint
         self.service_root = "/redfish/v1/"
-        self.systems_endpoint = self.base_url + "/redfish/v1/Systems/Self"
+        self.systems_endpoint = self.base_url + "/redfish/v1/Systems/Self/SD"
 
     def _make_request(self, method, url, **kwargs):
         """Make HTTP request with error handling"""
@@ -643,46 +643,52 @@ class RedfishPxeBootManager:
             "boot_order": boot_info.get("BootOrder", [])
         }
 
-    def set_pxe_boot_once(self):
+    def set_pxe_boot_once(self, boot_mode="UEFI"):
         """Set system to PXE boot once on next restart"""
         payload = {
             "Boot": {
                 "BootSourceOverrideEnabled": "Once",
                 "BootSourceOverrideTarget": "Pxe",
-                "BootSourceOverrideMode": "UEFI"
+                "BootSourceOverrideMode": boot_mode
             }
         }
         
-        headers = {"Content-Type": "application/json"}
+        headers = {
+            "Content-Type": "application/json",
+            "If-Match": "*"
+        }
         response = self._make_request("PATCH", self.systems_endpoint, 
                                     json=payload, headers=headers)
 
         if response:
             if response.status_code in [200, 202, 204]:
-                print("PXE boot configured successfully for next restart")
+                print(f"PXE boot configured successfully for next restart (Mode: {boot_mode})")
                 return True
             else:
                 print(f"Failed to set PXE boot. Status code: {response.status_code}")
                 return False
         return False
 
-    def set_pxe_boot_continuous(self):
+    def set_pxe_boot_continuous(self, boot_mode="UEFI"):
         """Set system to PXE boot continuously"""
         payload = {
             "Boot": {
                 "BootSourceOverrideEnabled": "Continuous",
                 "BootSourceOverrideTarget": "Pxe",
-                "BootSourceOverrideMode": "UEFI"
+                "BootSourceOverrideMode": boot_mode
             }
         }
         
-        headers = {"Content-Type": "application/json"}
+        headers = {
+            "Content-Type": "application/json",
+            "If-Match": "*"
+        }
         response = self._make_request("PATCH", self.systems_endpoint, 
                                     json=payload, headers=headers)
 
         if response:
             if response.status_code in [200, 202, 204]:
-                print("PXE boot configured successfully for continuous mode")
+                print(f"PXE boot configured successfully for continuous mode (Mode: {boot_mode})")
                 return True
             else:
                 print(f"Failed to set continuous PXE boot. Status code: {response.status_code}")
@@ -697,7 +703,10 @@ class RedfishPxeBootManager:
             }
         }
         
-        headers = {"Content-Type": "application/json"}
+        headers = {
+            "Content-Type": "application/json",
+            "If-Match": "*"
+        }
         response = self._make_request("PATCH", self.systems_endpoint, 
                                     json=payload, headers=headers)
 
@@ -707,6 +716,32 @@ class RedfishPxeBootManager:
                 return True
             else:
                 print(f"Failed to disable boot override. Status code: {response.status_code}")
+                return False
+        return False
+
+    def set_boot_target(self, target, enabled="Once", mode="UEFI"):
+        """Set boot target with flexible options"""
+        payload = {
+            "Boot": {
+                "BootSourceOverrideEnabled": enabled,
+                "BootSourceOverrideTarget": target,
+                "BootSourceOverrideMode": mode
+            }
+        }
+        
+        headers = {
+            "Content-Type": "application/json",
+            "If-Match": "*"
+        }
+        response = self._make_request("PATCH", self.systems_endpoint, 
+                                    json=payload, headers=headers)
+
+        if response:
+            if response.status_code in [200, 202, 204]:
+                print(f"Boot target set to '{target}' (Mode: {mode}, Enabled: {enabled})")
+                return True
+            else:
+                print(f"Failed to set boot target. Status code: {response.status_code}")
                 return False
         return False
 
@@ -932,15 +967,15 @@ def run_pxe_command(args):
             return 1
     
     elif args.pxe_once:
-        if pxe_manager.set_pxe_boot_once():
-            print("PXE boot configured for next restart")
+        if pxe_manager.set_pxe_boot_once(args.boot_mode):
+            print(f"PXE boot configured for next restart (Mode: {args.boot_mode})")
         else:
             print("Failed to configure PXE boot")
             return 1
     
     elif args.pxe_continuous:
-        if pxe_manager.set_pxe_boot_continuous():
-            print("PXE boot configured for continuous mode")
+        if pxe_manager.set_pxe_boot_continuous(args.boot_mode):
+            print(f"PXE boot configured for continuous mode (Mode: {args.boot_mode})")
         else:
             print("Failed to configure continuous PXE boot")
             return 1
@@ -960,6 +995,13 @@ def run_pxe_command(args):
                 print(f"  - {target}")
         else:
             print("No boot targets available or failed to retrieve")
+            return 1
+    
+    elif args.set_boot_target:
+        if pxe_manager.set_boot_target(args.set_boot_target, args.boot_enabled, args.boot_mode):
+            print("Boot target set successfully")
+        else:
+            print("Failed to set boot target")
             return 1
     
     return 0
@@ -1031,6 +1073,11 @@ Examples:
     pxe_group.add_argument('--pxe-continuous', action='store_true', help='Set PXE boot continuously')
     pxe_group.add_argument('--disable-override', action='store_true', help='Disable boot override')
     pxe_group.add_argument('--get-boot-targets', action='store_true', help='Get available boot targets')
+    pxe_group.add_argument('--set-boot-target', help='Set specific boot target')
+    pxe_parser.add_argument('--boot-mode', choices=['Legacy', 'UEFI'], default='UEFI',
+                           help='Boot mode for PXE operations (default: UEFI)')
+    pxe_parser.add_argument('--boot-enabled', choices=['Disabled', 'Once', 'Continuous'], default='Once',
+                           help='Boot override enabled setting (default: Once)')
     
     return parser
 
